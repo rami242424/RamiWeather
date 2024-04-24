@@ -1,17 +1,46 @@
+import * as Location from "expo-location";
 import { StatusBar } from "expo-status-bar";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text, ScrollView, Dimensions, } from "react-native";
+import { async } from './node_modules/expo-location/build/Location';
 
 const { width : SCREEN_WIDTH } = Dimensions.get("window");
 // const SCREEN_WIDTH = Dimensions.get("window").width
-console.log(SCREEN_WIDTH);
+// console.log(SCREEN_WIDTH);
 
 export default function App() {
+  const [district, setDistrict] = useState("Loading...");
+  const [location, setLocation] = useState();
+  const [ok, setOk] = useState(true);
+  const ask = async() => {
+    // 1. (위치)권한요청
+    // const permission = await Location.requestForegroundPermissionsAsync();
+    // console.log(permission);
+    const {granted} = await Location.requestForegroundPermissionsAsync();
+    if(!granted){
+      setOk(false);
+    }
+    // 2. 유저의 위치 정보 얻기
+    // const location = await Location.getCurrentPositionAsync({ accuracy: 5});
+    // console.log(location);
+    const { coords: {latitude , longitude}} = await Location.getCurrentPositionAsync({ accuracy: 5});
+    const location = await Location.reverseGeocodeAsync(
+      {latitude, longitude}, 
+      {useGoogleMaps:false}
+    );
+    // console.log(location[0].district);
+    setDistrict(location[0].district);
+
+  }
+  useEffect(()=> {
+    ask();
+  }, [])
+
   return(
     <View style={styles.container}>
       <StatusBar style="light"/>
       <View style={styles.city}>
-        <Text style={styles.cityName}>Seoul</Text>
+        <Text style={styles.cityName}>{district}</Text>
       </View>
       <ScrollView 
         pagingEnabled 
@@ -37,7 +66,7 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container : {
-    flex: 1, backgroundColor: "tomato"
+    flex: 1, backgroundColor: "teal"
   },
 
   city: {
