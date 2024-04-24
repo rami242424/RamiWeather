@@ -3,12 +3,27 @@ import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text, ScrollView, Dimensions, ActivityIndicator } from "react-native";
 import { async } from './node_modules/expo-location/build/Location';
+import { Fontisto } from '@expo/vector-icons';
+
 
 const { width : SCREEN_WIDTH } = Dimensions.get("window");
 // const SCREEN_WIDTH = Dimensions.get("window").width
 // console.log(SCREEN_WIDTH);
 
+// API_KEY
 const API_KEY = "784ab24ff2ed5d94d4288abed9e25d13";
+
+// ICON
+const icons = {
+  Clouds : "cloudy",
+  Clear : "day-sunny",
+  Rain: "rain",
+  Atmosphere: "cloudy-gusts",
+  Snow: "snow",
+  Drizzle: "day-rain",
+  Thunderstorm: "lightning",
+}
+
 
 export default function App() {
   const [district, setDistrict] = useState("Loading...");
@@ -56,13 +71,16 @@ export default function App() {
         contentContainerStyle={styles.weather}
       >
         {days.length === 0 ? (
-          <View style={styles.day}>
+          <View style={{ ...styles.day, alignItems: "center" }}>
             <ActivityIndicator color="black" style={{ marginTop: 10}} size="large" />
           </View>
         ) : (
           days.map((day, index) => 
           <View key={index} style={styles.day}>
-            <Text style={styles.temp}>{parseFloat(day.temp.day).toFixed(1)}</Text>
+            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", width: "100%", marginRight: 10}}>
+              <Text style={styles.temp}>{parseFloat(day.temp.day).toFixed(1)}</Text>
+              <Fontisto name={icons[day.weather[0].main]} size={50} color="black" />
+            </View>
             <Text style={styles.desc}>{day.weather[0].main}</Text>
             <Text style={styles.tinyText}>{day.weather[0].description}</Text>
           </View>
@@ -104,7 +122,7 @@ const styles = StyleSheet.create({
   },
 
   temp: {
-    fontSize: 170,
+    fontSize: 150,
     marginTop: 50,
 
   },
