@@ -9,7 +9,8 @@ import {
 
 } from "react-native";
 
-const { width : SCREEN_WIDTH } = Dimensions.get("window");
+const SCREEN_WIDTH  = Dimensions.get("window").width;
+// const { width : SCREEN_WIDTH } = Dimensions.get("window");
 // console.log(SCREEN_WIDTH);
 
 export default function App() {
@@ -18,7 +19,11 @@ export default function App() {
       <View style={styles.city}>
         <Text style={styles.cityName}>Seoul</Text>
       </View>
-      <ScrollView horizontal contentContainerStyle={styles.weather}>
+      <ScrollView 
+        pagingEnabled
+        horizontal 
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.weather}>
         <View style={styles.day}>
           <Text style={styles.temp}>27</Text>
           <Text style={styles.desc}>Sunny</Text>
@@ -63,7 +68,6 @@ const styles = StyleSheet.create({
   },
 
   weather: {
-    backgroundColor: "blue",
   },
 
   day: {
