@@ -7,9 +7,11 @@ import { async } from './node_modules/expo-location/build/Location';
 const { width : SCREEN_WIDTH } = Dimensions.get("window");
 // const SCREEN_WIDTH = Dimensions.get("window").width
 // console.log(SCREEN_WIDTH);
+const API_KEY = "09ccd72a24f2ae9530ae57fe5dbc6d21";
 
 export default function App() {
   const [district, setDistrict] = useState("Loading...");
+  const [days, setDays] = useState([]);
   const [region, setRegion] = useState("");
   const [location, setLocation] = useState();
   const [ok, setOk] = useState(true);
@@ -32,7 +34,9 @@ export default function App() {
     // console.log(location[0].region);
     setDistrict(location[0].district);
     setRegion(location[0].region);
-
+    const response = await fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${latitude}&lon=${longitude}&exclude=alerts&appid=${API_KEY}`);
+    const json = await response.json();
+    console.log(json);
   }
   useEffect(()=> {
     ask();
